@@ -3,7 +3,7 @@
 My own small attempt at creating an idle game.
 
 
-##html version ?
+##h tml version ?
 [game] (Builds/html/universim.html)
 
-##Screenshot
+## Screenshot
