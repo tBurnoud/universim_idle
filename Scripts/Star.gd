@@ -13,7 +13,7 @@ var dE = Big.new(2.5,-2)
 var pression = Big.new(0,0)
 var dP = Big.new(0,0)
 
-var temperatureLoss = Big.new(0, 0)
+var temperatureLoss = Big.new(1, 0)
 
 var Temperature = Big.new(1,7)
 var Mass = Big.new(8, -1)
@@ -39,7 +39,7 @@ onready var is_PP2_unlocked = false
 onready var is_PP3_unlocked = false
 
 var dE_list = []
-
+var dE_filter = []
 var CostTempUpgrade = Big.new(1,1)
 var tempIncrease = Big.new(1, 4)
 
@@ -58,6 +58,9 @@ func _init(type=unit_type.Scientific):
 	dE_list.append(Big.new(1.735, 7))		#3 energy output for Li + H -> 2He
 	dE_list.append(Big.new(1.821, 7))		#4 energy output for Be -> 2He
 	self.type = type
+	
+	for _i in range(0, 100):
+		dE_filter.append(float(0.0))
 	
 func update_unit(index:int):
 	print(index)
@@ -141,16 +144,25 @@ func tick(delta : float):
 			
 	tmp = Big.new(tmp_dE).multiply(delta)
 	energy.plus(tmp)
-	updateTemperature(tmp)
+	dE_filter.push_front(tmp.toFloat())
+	dE_filter.pop_back()
+	var res = Big.new(get_dE())
+	if res:
+		updateTemperature(res)
+	updatePression()
 	
 func updateTemperature(var dE : Big):
-	
+	if not dE:
+		return
 	var tmp = Big.new(dE)
-	tmp.divide(temperatureLoss)
-	var lama = log(tmp.toFloat())
-	tmp.divide(lama)
+	tmp.divide(Big.new(Temperature).square())
+#	tmp.divide(temperatureLoss)
+#	var lama = log(tmp.toFloat())
+#	print("lama " + str(lama))
+#	tmp.divide(lama)
+	print("tmp " + tmp.toString())
 	Temperature.plus(tmp)
-	Temperature.minus(temperatureLoss)
+#	Temperature.minus(temperatureLoss)
 	
 	var tmp2 = Big.new(Temperature)
 	tmp2.divide(temperatureLoss)
@@ -165,6 +177,24 @@ func updateTemperature(var dE : Big):
 #	var g2 = get_node(debugGraph2)
 #	g2.record_point("dT", tmp2.toFloat())
 #	Temperature.plus(tmp2)
+
+func updatePression():
+	var sum = Big.new(0,0)
+	var tmp = Big.new(H_mass)
+	tmp.multiply(1)
+	sum.plus(tmp)
+	tmp = Big.new(He_mass)
+	tmp.multiply(2)
+	sum.plus(tmp)
+	sum.plus(tmp)
+	tmp = Big.new(He_mass)
+	tmp.multiply(4)
+	sum.plus(tmp)
+	tmp = Big.new(He_mass)
+	tmp.multiply(8)
+	sum.plus(tmp)
+	
+	pression = Big.new(sum)
 
 func update_PP1rate_cost():
 	var tmp
@@ -182,8 +212,8 @@ func update_PP1outputRate_cost():
 	var tmp
 	if energy.isLargerThanOrEqualTo(PP1_outputRate_cost):
 		energy.minus(PP1_outputRate_cost)
-		tmp = Big.new(1, -1)
-		PP1_outputRate.multiply(tmp)
+		tmp = Big.new(5, -2)
+		PP1_outputRate.plus(tmp)
 		tmp = Big.new(2, 1)
 		PP1_outputRate_cost.multiply(tmp)
 		return true
@@ -195,8 +225,8 @@ func update_PP1chance_cost():
 	if energy.isLargerThanOrEqualTo(PP1_chance_cost):
 		energy.minus(PP1_chance_cost)
 		tmp = Big.new(0.05)
-		PP1_chance.multiply(tmp)
-		tmp = Big.new(1,1)
+		PP1_chance.plus(tmp)
+		tmp = Big.new(2,1)
 		PP1_chance_cost.multiply(tmp)
 		return true
 	
@@ -214,7 +244,13 @@ func get_Energy() -> float:
 	return energy.toFloat()
 
 func get_dE() -> float:
-	return dE.toFloat()
+	var res : float
+	res = 0.0
+	var size = dE_filter.size()
+	for x in dE_filter:
+		res = x + res
+	res = res / size
+	return res
 
 	
 func get_PP1_rate_cost() -> float:
@@ -235,6 +271,13 @@ func get_Energy_string() -> String:
 	elif self.type == unit_type.AA:
 		return energy.toAA()
 	return energy.toString()
+	
+func get_Pression_string() -> String:
+	if self.type == unit_type.Scientific:
+		return pression.toScientific()
+	elif self.type == unit_type.AA:
+		return pression.toAA()
+	return pression.toString()
 	
 func get_TempLoss_string() -> String:
 	if self.type:
@@ -378,14 +421,16 @@ func export_config():
 		
 	}
 	
+
 	var file = File.new()
-	var location = "user://save_config.sav"
-	
+	var location = "save_config.txt"
+
 	print("saving config to : " + OS.get_user_data_dir())
 	if file.open(location, file.WRITE) != 0:
 		printerr("Cannot write file at " + location)
 	else:
-		file.store_line(to_json(config))
+		file.store_string(to_json(config))
+#		file.store_line(to_json(config))
 		file.close()
 
 #Save the star data  into a file 
