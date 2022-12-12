@@ -3,4 +3,4 @@
 My own small attempt at creating an idle game.
 
 
-[game] (/Builds/html/universim.html)
+[game] (Builds/html/universim.html)
