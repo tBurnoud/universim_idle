@@ -18,10 +18,16 @@ _global_script_classes=[ {
 "class": "Star",
 "language": "GDScript",
 "path": "res://Scripts/Star.gd"
+}, {
+"base": "Resource",
+"class": "StarData",
+"language": "GDScript",
+"path": "res://Scripts/StarData.gd"
 } ]
 _global_script_class_icons={
 "Big": "",
-"Star": ""
+"Star": "",
+"StarData": ""
 }
 
 [application]
