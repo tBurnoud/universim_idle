@@ -58,7 +58,7 @@ func _process(delta):
 		g2.record_point("Temperature loss", star.get_TempLoss())
 		
 		$"Container/topbar/EnergyContainer/Energy".text = star.get_Energy_string() + " eV"
-		$"Container/topbar/EnergyContainer/deltaEnergy".text = str(star.get_dE()) + " eV/s"
+		$"Container/topbar/EnergyContainer/deltaEnergy".text = " " + star.get_dE_string() + " eV/s"
 		$"Container/topbar/EnergyContainer2/Pression".text = star.get_Pression_string() + " ??"
 		$"Container/TabContainer/Star/StarInfos/Temperature".text = star.get_Temp_string() + " °K"
 		$"Container/TabContainer/Star/StarInfos/Mass".text = star.sum_atoms_mass().toString() + " Solar Mass"

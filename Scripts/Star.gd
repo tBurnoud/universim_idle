@@ -2,10 +2,13 @@ extends Resource
 
 #loading Big library to handle really big numbers
 const Big = preload("res://Scripts/Big.gd")
+const starData = preload("res://Scripts/StarData.gd")
 
 enum unit_type {Scientific, AA}
 
 class_name Star
+var data
+var config = ConfigFile.new()
 
 var energy = Big.new(0,0)
 var dE = Big.new(2.5,-2)
@@ -13,16 +16,22 @@ var dE = Big.new(2.5,-2)
 var pression = Big.new(0,0)
 var dP = Big.new(0,0)
 
-var temperatureLoss = Big.new(1, 0)
+var temperatureLoss = Big.new(1)
 
 var Temperature = Big.new(1,7)
 var Mass = Big.new(8, -1)
 
-var H_mass = Big.new(5,29)
-var He_mass = Big.new(0,0)
-var Li_mass = Big.new(0,0)
-var Be_mass = Big.new(0,0)
-var B_mass = Big.new(0,0)
+var H_mass : Big
+var He_mass : Big
+var Li_mass : Big
+var Be_mass : Big
+var B_mass : Big
+
+#var H_mass = Big.new(5,29)
+#var He_mass = Big.new(0,0)
+#var Li_mass = Big.new(0,0)
+#var Be_mass = Big.new(0,0)
+#var B_mass = Big.new(0,0)
 
 var PP1_rate = Big.new(8,0)
 var PP1_chance = Big.new(1, -1)
@@ -40,6 +49,7 @@ onready var is_PP3_unlocked = false
 
 var dE_list = []
 var dE_filter = []
+
 var CostTempUpgrade = Big.new(1,1)
 var tempIncrease = Big.new(1, 4)
 
@@ -51,7 +61,15 @@ var noFusion_cpt = 0
 
 var type = null
 
-func _init(type=unit_type.Scientific):
+func init_from_cfg(data):
+	
+	H_mass = Big.new(data.H_mass)
+	He_mass = Big.new(data.He_mass)
+	Li_mass = Big.new(data.Li_mass)
+	Be_mass = Big.new(data.Be_mass)
+	B_mass = Big.new(data.B_mass)
+	
+func _init(type=unit_type.Scientific):	
 	dE_list.append(Big.new(1.9794, 7))		#0 energy output for 4h -> He + 2H
 	dE_list.append(Big.new(1.59,6))			#1 energy output for 2He -> Be
 	dE_list.append(Big.new(8.6, 5))			#2 energy output for Be -> Li
@@ -61,6 +79,10 @@ func _init(type=unit_type.Scientific):
 	
 	for _i in range(0, 100):
 		dE_filter.append(float(0.0))
+	
+	data = StarData.new()
+	
+	init_from_cfg(data)
 	
 func update_unit(index:int):
 	print(index)
@@ -148,35 +170,26 @@ func tick(delta : float):
 	dE_filter.pop_back()
 	var res = Big.new(get_dE())
 	if res:
-		updateTemperature(res)
+		updateTemperature(res, delta)
 	updatePression()
 	
-func updateTemperature(var dE : Big):
+func updateTemperature(var dE : Big, var delta:float):
 	if not dE:
 		return
 	var tmp = Big.new(dE)
 	tmp.divide(Big.new(Temperature).square())
-#	tmp.divide(temperatureLoss)
-#	var lama = log(tmp.toFloat())
-#	print("lama " + str(lama))
-#	tmp.divide(lama)
-	print("tmp " + tmp.toString())
+	tmp.multiply(64.0)
+
 	Temperature.plus(tmp)
-#	Temperature.minus(temperatureLoss)
 	
 	var tmp2 = Big.new(Temperature)
-	tmp2.divide(temperatureLoss)
-#	tmp2.divide(Temperature)
-#	print(tmp2.toString())
-	temperatureLoss = Big.new(dE)
-	temperatureLoss.divide(2.0)
-#	temperatureLoss.power(1.25)
-#	temperatureLoss.multiply(0.9)
-#	temperatureLoss.square()
-#	temperatureLoss.square()
-#	var g2 = get_node(debugGraph2)
-#	g2.record_point("dT", tmp2.toFloat())
-#	Temperature.plus(tmp2)
+	tmp2.multiply(delta)
+	tmp2.divide(1024)
+	Temperature.minus(tmp2)
+
+#	temperatureLoss = Big.new(dE)
+#	temperatureLoss.divide(2.0)
+
 
 func updatePression():
 	var sum = Big.new(0,0)
@@ -252,18 +265,20 @@ func get_dE() -> float:
 	res = res / size
 	return res
 
+
+	
 	
 func get_PP1_rate_cost() -> float:
 	return PP1_rate_cost.toFloat()
 	
 #Getters for star variables as STRING
-func get_dE_string() -> String:
-	if self.type:
-		if self.type == unit_type.Scientific:
-			return dE.toScientific()
-		elif self.type == unit_type.AA:
-			return dE.toAA()
-	return dE.toString()
+func get_dE_string():
+	var res = Big.new(get_dE())
+	if self.type == unit_type.Scientific:
+		return res.toScientific()
+	elif self.type == unit_type.AA:
+		return res.toAA()
+	return res.toString()
 
 func get_Energy_string() -> String:
 	if self.type == unit_type.Scientific:
@@ -409,6 +424,8 @@ func unlock_PP3():
 
 func export_config():
 	
+	data.export_config()
+	
 	var config = {
 		"list 1" : {
 			"0" : 1e6,
@@ -421,7 +438,6 @@ func export_config():
 		
 	}
 	
-
 	var file = File.new()
 	var location = "save_config.txt"
 
@@ -435,5 +451,6 @@ func export_config():
 
 #Save the star data  into a file 
 func export_save():
-	var res = ResourceSaver.save("Save/lama.tres", self)
-	assert(res == OK)
+	var res = ResourceSaver.save("Save/star.tres", data)
+	print(res)
+#	assert(res == OK)

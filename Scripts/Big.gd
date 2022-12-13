@@ -30,7 +30,7 @@ func _init(m,e=0):
 func size_check(m):
 	if m > MAX_MANTISSA:
 		printerr(self.toScientific() + " BIG ERROR: MANTISSA TOO LARGE, PLEASE USE EXPONENT OR SCIENTIFIC NOTATION (mantissa : " + str(m) + ")")
-		breakpoint
+#		breakpoint
 
 func type_check(n):
 	if typeof(n) == TYPE_INT or typeof(n) == TYPE_REAL:
@@ -76,6 +76,7 @@ func divide(n):
 	size_check(n.mantissa)
 	if n.mantissa == 0:
 		printerr("BIG ERROR: DIVIDE BY ZERO")
+		breakpoint
 		return self
 	
 	var new_exponent = exponent - n.exponent
@@ -238,7 +239,7 @@ func toString():
 		return toScientific()
 
 func toScientific():
-	if exponent >= 0:
+	if exponent >= 1:
 		return str(floor(mantissa*1000.0)/1000.0) + "e" + str(exponent)
 	return str(floor(mantissa*1000.0)/1000.0)
 

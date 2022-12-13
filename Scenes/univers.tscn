@@ -87,22 +87,19 @@ debugGraph = NodePath("Panel")
 debugGraph2 = NodePath("Panel2")
 
 [node name="Container" type="VBoxContainer" parent="."]
-margin_right = 1920.0
-margin_bottom = 1142.0
-grow_vertical = 2
-rect_min_size = Vector2( 0, 1080 )
+rect_min_size = Vector2( 1900, 1080 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="topbar" type="VBoxContainer" parent="Container"]
-margin_right = 3812.0
-margin_bottom = 146.0
+margin_right = 1920.0
+margin_bottom = 75.0
 grow_horizontal = 2
 alignment = 1
 
 [node name="EnergyContainer" type="HBoxContainer" parent="Container/topbar"]
-margin_right = 3812.0
+margin_right = 1920.0
 margin_bottom = 71.0
 
 [node name="Energy" type="Label" parent="Container/topbar/EnergyContainer"]
@@ -128,10 +125,11 @@ __meta__ = {
 
 [node name="EnergyContainer2" type="HBoxContainer" parent="Container/topbar"]
 margin_top = 75.0
-margin_right = 3812.0
-margin_bottom = 146.0
+margin_right = 1920.0
+margin_bottom = 75.0
 
 [node name="Pression" type="Label" parent="Container/topbar/EnergyContainer2"]
+visible = false
 margin_right = 358.0
 margin_bottom = 71.0
 hint_tooltip = "Total Amount of energy "
@@ -143,6 +141,7 @@ __meta__ = {
 }
 
 [node name="deltaPression" type="Label" parent="Container/topbar/EnergyContainer2"]
+visible = false
 margin_left = 362.0
 margin_right = 896.0
 margin_bottom = 71.0
@@ -153,10 +152,10 @@ __meta__ = {
 }
 
 [node name="TabContainer" type="TabContainer" parent="Container"]
-margin_top = 150.0
-margin_right = 1916.0
-margin_bottom = 1086.0
-rect_min_size = Vector2( 1900, 900 )
+margin_top = 79.0
+margin_right = 1920.0
+margin_bottom = 1051.0
+rect_min_size = Vector2( 1920, 900 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -235,25 +234,27 @@ __meta__ = {
 }
 
 [node name="TempUpgrade" type="Button" parent="Container/TabContainer/Star/UpgradeList"]
+visible = false
 margin_top = 436.0
 margin_right = 824.0
 margin_bottom = 456.0
 text = "Increase  AAA"
 
 [node name="TempUpgrade2" type="Button" parent="Container/TabContainer/Star/UpgradeList"]
+visible = false
 margin_top = 460.0
 margin_right = 824.0
 margin_bottom = 480.0
 text = "Increase XXX"
 
 [node name="TempUpgrade3" type="Button" parent="Container/TabContainer/Star/UpgradeList"]
+visible = false
 margin_top = 484.0
 margin_right = 824.0
 margin_bottom = 504.0
 text = "Increase YYY"
 
 [node name="Cycles" type="HBoxContainer" parent="Container/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -263,14 +264,14 @@ margin_bottom = -4.0
 
 [node name="Elements" type="VBoxContainer" parent="Container/TabContainer/Cycles"]
 margin_right = 600.0
-margin_bottom = 940.0
+margin_bottom = 936.0
 rect_min_size = Vector2( 600, 900 )
 alignment = 1
 
 [node name="H" type="Label" parent="Container/TabContainer/Cycles/Elements"]
-margin_top = 434.0
+margin_top = 432.0
 margin_right = 600.0
-margin_bottom = 505.0
+margin_bottom = 503.0
 custom_fonts/font = SubResource( 1 )
 text = "0 H"
 __meta__ = {
@@ -324,20 +325,22 @@ __meta__ = {
 [node name="FusionsTab" type="TabContainer" parent="Container/TabContainer/Cycles"]
 margin_left = 604.0
 margin_right = 1904.0
-margin_bottom = 940.0
+margin_bottom = 936.0
 rect_min_size = Vector2( 1300, 0 )
 tab_align = 0
 
 [node name="Hydrogen" type="HBoxContainer" parent="Container/TabContainer/Cycles/FusionsTab"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 12.0
-margin_bottom = -24.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
 rect_min_size = Vector2( 900, 900 )
 
 [node name="PP-Cycle" type="Panel" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen"]
 margin_right = 600.0
-margin_bottom = 904.0
+margin_bottom = 900.0
 rect_min_size = Vector2( 600, 900 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -380,7 +383,7 @@ __meta__ = {
 [node name="Upgrades" type="Panel" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen"]
 margin_left = 604.0
 margin_right = 1204.0
-margin_bottom = 904.0
+margin_bottom = 900.0
 rect_min_size = Vector2( 600, 900 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -394,64 +397,65 @@ __meta__ = {
 }
 
 [node name="Stats" type="VBoxContainer" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer"]
-margin_right = 300.0
+margin_right = 256.0
 margin_bottom = 940.0
-rect_min_size = Vector2( 300, 940 )
+rect_min_size = Vector2( 256, 940 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="rate" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
-margin_right = 300.0
+margin_right = 256.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 0, 20 )
 text = "Conversion rate : 1.0"
 
 [node name="outputRate" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
 margin_top = 24.0
-margin_right = 300.0
+margin_right = 256.0
 margin_bottom = 38.0
 text = "Output conversion rate : 1.0"
 
 [node name="chance" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
 margin_top = 42.0
-margin_right = 300.0
+margin_right = 256.0
 margin_bottom = 56.0
 text = "Chance for PP1 to happen : 0.1"
 
 [node name="Upgrades" type="VBoxContainer" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer"]
-margin_left = 304.0
-margin_right = 604.0
+margin_left = 260.0
+margin_right = 600.0
 margin_bottom = 940.0
-rect_min_size = Vector2( 300, 940 )
+rect_min_size = Vector2( 340, 940 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PP1_rate_button" type="Button" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades"]
-margin_right = 300.0
+margin_right = 340.0
 margin_bottom = 20.0
-rect_min_size = Vector2( 250, 20 )
-text = "Increase PP1 conversion rate"
+rect_min_size = Vector2( 150, 20 )
+text = "Increase PP1 conversion rate cost 1e6)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PP1_outputRate_button" type="Button" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades"]
 margin_top = 24.0
-margin_right = 300.0
+margin_right = 340.0
 margin_bottom = 44.0
-text = "Increase PP1 output conversion rate"
+rect_min_size = Vector2( 150, 0 )
+text = "Increase PP1 output conversion rate (cost 1e6)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PP1_chance_button" type="Button" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades"]
 margin_top = 48.0
-margin_right = 300.0
+margin_right = 340.0
 margin_bottom = 68.0
 rect_min_size = Vector2( 250, 0 )
-text = "Increase PP1 chance"
+text = "Increase PP1 chance (cost 1e6)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -582,11 +586,12 @@ __meta__ = {
 }
 
 [node name="Options" type="HBoxContainer" parent="Container/TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
 margin_top = 32.0
-margin_right = -1904.0
+margin_right = -4.0
 margin_bottom = -4.0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="Container/TabContainer/Options"]
@@ -635,6 +640,7 @@ margin_bottom = 68.0
 text = "Save Star Infos"
 
 [node name="LineEdit" type="LineEdit" parent="Container/TabContainer/Options/VBoxContainer4"]
+visible = false
 margin_top = 72.0
 margin_right = 475.0
 margin_bottom = 96.0
