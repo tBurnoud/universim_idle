@@ -47,7 +47,7 @@ var PP3_chance_cost = Big.new(4269)
 var config = ConfigFile.new()
 
 func load_configFile(path : String):
-	var err = config.load("Save/starConfig.cfg")
+	var err = config.load(path)
 	if err != OK:
 		printerr("Cannot load config file " + path + " ...")
 		return
@@ -89,7 +89,7 @@ func load_configFile(path : String):
 	print("Sucessfully loaded config file !")
 
 func _init():
-	load_configFile("Save.starConfig.cfg")
+	load_configFile("Save/starConfig.cfg")
 
 
 func _ready():

@@ -40,9 +40,9 @@ var PP3_rate = Big.new(1, 0)
 var PP3_chance = Big.new(1, -1)
 var PP3_outputRate = Big.new(1,0)
 
-onready var is_PP1_unlocked = false
-onready var is_PP2_unlocked = false
-onready var is_PP3_unlocked = false
+var is_PP1_unlocked = false
+var is_PP2_unlocked = false
+var is_PP3_unlocked = false
 
 var SupernovaVal = Big.new(2,0)
 
@@ -77,51 +77,56 @@ func init_from_save(savefile):
 #	while savefile.get_position() < savefile.get_len():
 		# Get the saved dictionary from the next line in the save file
 		var node_data = parse_json(savefile.get_line())
+		if node_data == null:
+			print("could not read savefile...")
+			return
 		
 		Temperature = Big.new(node_data["Temperature"])
 		dE_contrib_to_temp = Big.new(node_data["dE_contrib_to_temp"])
 		
-		is_PP1_unlocked = node_data["PP1_unlock"]
-		is_PP2_unlocked = node_data["PP2_unlock"]
-		is_PP3_unlocked = node_data["PP3_unlock"]
+		self.is_PP1_unlocked = node_data["PP1_unlock"]
+		self.is_PP2_unlocked = node_data["PP2_unlock"]
+		self.is_PP3_unlocked = node_data["PP3_unlock"]
 		
-		He_mass = Big.new(node_data["He_mass"])
-		H_mass = Big.new(node_data["H_mass"])
-		Li_mass = Big.new(node_data["Li_mass"])
-		Be_mass = Big.new(node_data["Be_mass"])
-		B_mass = Big.new(node_data["B_mass"])
+		self.He_mass = Big.new(node_data["He_mass"])
+		self.H_mass = Big.new(node_data["H_mass"])
+		self.Li_mass = Big.new(node_data["Li_mass"])
+		self.Be_mass = Big.new(node_data["Be_mass"])
+		self.B_mass = Big.new(node_data["B_mass"])
 		
-		PP1_rate = Big.new(node_data["PP1_rate"])
-		PP1_outputRate = Big.new(node_data["PP1_outputRate"])
-		PP1_chance = Big.new(node_data["PP1_chance"])
+		self.PP1_rate = Big.new(node_data["PP1_rate"])
+		self.PP1_outputRate = Big.new(node_data["PP1_outputRate"])
+		self.PP1_chance = Big.new(node_data["PP1_chance"])
 		
-		PP2_rate = Big.new(node_data["PP2_rate"])
-		PP2_outputRate = Big.new(node_data["PP2_outputRate"])
-		PP2_chance = Big.new(node_data["PP2_chance"])
+		self.PP2_rate = Big.new(node_data["PP2_rate"])
+		self.PP2_outputRate = Big.new(node_data["PP2_outputRate"])
+		self.PP2_chance = Big.new(node_data["PP2_chance"])
 		
-		PP3_rate = Big.new(node_data["PP3_rate"])
-		PP3_outputRate = Big.new(node_data["PP3_outputRate"])
-		PP3_chance = Big.new(node_data["PP3_chance"])
+		self.PP3_rate = Big.new(node_data["PP3_rate"])
+		self.PP3_outputRate = Big.new(node_data["PP3_outputRate"])
+		self.PP3_chance = Big.new(node_data["PP3_chance"])
 		
-		PP1_rate_cost = Big.new(node_data["PP1_rate_cost"])
-		PP1_outputRate_cost = Big.new(node_data["PP1_outputRate_cost"])
-		PP1_chance_cost = Big.new(node_data["PP1_chance_cost"])
+		self.PP1_rate_cost = Big.new(node_data["PP1_rate_cost"])
+		self.PP1_outputRate_cost = Big.new(node_data["PP1_outputRate_cost"])
+		self.PP1_chance_cost = Big.new(node_data["PP1_chance_cost"])
 		
-		PP2_rate_cost = Big.new(node_data["PP2_rate_cost"])
-		PP2_outputRate_cost = Big.new(node_data["PP2_outputRate_cost"])
-		PP2_chance_cost = Big.new(node_data["PP2_chance_cost"])
+		self.PP2_rate_cost = Big.new(node_data["PP2_rate_cost"])
+		self.PP2_outputRate_cost = Big.new(node_data["PP2_outputRate_cost"])
+		self.PP2_chance_cost = Big.new(node_data["PP2_chance_cost"])
 		
-		PP3_rate_cost = Big.new(node_data["PP3_rate_cost"])
-		PP3_outputRate_cost = Big.new(node_data["PP3_outputRate_cost"])
-		PP3_chance_cost = Big.new(node_data["PP3_chance_cost"])
+		self.PP3_rate_cost = Big.new(node_data["PP3_rate_cost"])
+		self.PP3_outputRate_cost = Big.new(node_data["PP3_outputRate_cost"])
+		self.PP3_chance_cost = Big.new(node_data["PP3_chance_cost"])
+		
+#		breakpoint
+		print("Sucessfully loaded savefile !")
 
 func init_from_cfg(data):
 	
 	Temperature = Big.new(data.Temperature)
 	dE_contrib_to_temp = Big.new(data.dE_contrib_to_temp)
 	dE_contrib_cost = Big.new(data.dE_contrib_cost)
-#	temperatureLoss = Big.new(data.init_TempLoss)
-#	dE = config.get_value("base", "base_dE")
+
 	
 	H_mass = Big.new(data.H_mass)
 	He_mass = Big.new(data.He_mass)
@@ -166,9 +171,9 @@ func _init(type=unit_type.Scientific):
 		dE_filter.append(float(0.0))
 	
 	var file = File.new()
-	if file.file_exists("Save/star.save"):
-		file.open("Save/star.save", File.READ)
-		print("save file found !")
+	if file.file_exists("user://star.save"):
+		file.open("user://star.save", File.READ)
+		print("save file found !", file)
 		init_from_save(file)
 	else:
 		data = StarData.new()

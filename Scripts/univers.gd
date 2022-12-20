@@ -22,20 +22,23 @@ var isDebug = false
 
 func _ready():
 	star = Star.new(unit_type.Scientific)
-	
+
 	var savefile = File.new()
 	#checking if a save exist and if so, loading achievements from it
-	if savefile.file_exists("Save/achievements.save"):
-		savefile.open("Save/achievements.save", File.READ)
+	if savefile.file_exists("user://achievements.save"):
+		savefile.open("user://achievements.save", File.READ)
 		var ach_data = parse_json(savefile.get_line())
 		
 		achievements_list = ach_data
+		print("loaded achievements from save file !")
+		print(ach_data)
 	savefile.close()
 	
 	#check if a star save exist and if so, update displayed value accordingly
-	if savefile.file_exists("Save/star.save"):
+	if savefile.file_exists("user://star.save"):
 		if star.is_PP1_unlocked():
 			$"Container/TabContainer/Cycles/FusionsTab/Hydrogen/PP-Cycle/VBoxContainer/PP1unlock".visible = false
+			$"Container/TabContainer/Cycles/Elements/He".visible = true
 
 			$"Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades/PP1_rate_button".text = "Increase PP1 conversion rate (Cost : " + star.get_PP1_rate_cost_string() + ")"
 			$"Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats/PP1_rate".text = "Conversion rate : " + star.get_PP1_rate_string()
@@ -285,7 +288,7 @@ func _on_SaveConfig_pressed():
 
 func _on_SaveStar_pressed():
 	var save_game = File.new()
-	save_game.open("Save/star.save", File.WRITE)
+	save_game.open("user://star.save", File.WRITE)
 	var save_nodes = self.get_tree().get_nodes_in_group("Persist")
 	save_nodes.append(star)
 	for node in save_nodes:
@@ -301,13 +304,16 @@ func _on_SaveStar_pressed():
 
 		# Call the node's save function.
 		var node_data = node.call("save")
-
+		
+#		print("saving ", node_data)
 		# Store the save dictionary as a new line in the save file.
 		save_game.store_line(to_json(node_data))
+		
 	
 	save_game.close()
 	
-	save_game.open("Save/achievements.save", File.WRITE)
+	
+	save_game.open("user://achievements.save", File.WRITE)
 	
 	save_game.store_line(to_json(achievements_list))
 	
