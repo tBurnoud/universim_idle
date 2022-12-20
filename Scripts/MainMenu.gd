@@ -1,6 +1,6 @@
 extends Control
 
-var FILE_NAME = "Save/config.tres"
+var FILE_NAME = "Save/star.save"
 
 func _ready():
 	var file = File.new()

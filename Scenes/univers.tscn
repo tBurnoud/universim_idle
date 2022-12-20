@@ -23,15 +23,16 @@ shader = ExtResource( 4 )
 next_pass = SubResource( 3 )
 lifetime_randomness = 1.0
 emission_shape = 1
-emission_sphere_radius = 1.0
+emission_sphere_radius = 30.0
 flag_disable_z = true
 spread = 180.0
 gravity = Vector3( 0, 0, 0 )
 initial_velocity = 64.0
 initial_velocity_random = 0.4
 orbit_velocity = 0.0
-orbit_velocity_random = 0.0
+orbit_velocity_random = 0.1
 linear_accel = 2.0
+tangential_accel = 50.0
 
 [sub_resource type="Shader" id=5]
 code = "shader_type canvas_item;
@@ -103,22 +104,22 @@ margin_right = 1920.0
 margin_bottom = 71.0
 
 [node name="Energy" type="Label" parent="Container/topbar/EnergyContainer"]
-margin_right = 137.0
+margin_right = 133.0
 margin_bottom = 71.0
 hint_tooltip = "Total Amount of energy "
 mouse_filter = 1
 custom_fonts/font = SubResource( 1 )
-text = "0 eV"
+text = "0 EU"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="deltaEnergy" type="Label" parent="Container/topbar/EnergyContainer"]
-margin_left = 141.0
-margin_right = 436.0
+margin_left = 137.0
+margin_right = 428.0
 margin_bottom = 71.0
 custom_fonts/font = SubResource( 1 )
-text = "  +0.0eV/s"
+text = "  +0.0EU/s"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -154,8 +155,9 @@ __meta__ = {
 [node name="TabContainer" type="TabContainer" parent="Container"]
 margin_top = 79.0
 margin_right = 1920.0
-margin_bottom = 1051.0
+margin_bottom = 1055.0
 rect_min_size = Vector2( 1920, 900 )
+use_hidden_tabs_for_min_size = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -189,6 +191,7 @@ __meta__ = {
 
 [node name="Particles2D" type="Particles2D" parent="Container/TabContainer/Star/starDisplay/ColorRect"]
 position = Vector2( 128, 128 )
+amount = 128
 process_material = SubResource( 4 )
 
 [node name="StarInfos" type="VBoxContainer" parent="Container/TabContainer/Star"]
@@ -234,11 +237,10 @@ __meta__ = {
 }
 
 [node name="TempUpgrade" type="Button" parent="Container/TabContainer/Star/UpgradeList"]
-visible = false
-margin_top = 436.0
+margin_top = 460.0
 margin_right = 824.0
-margin_bottom = 456.0
-text = "Increase  AAA"
+margin_bottom = 480.0
+text = "Increase  dE contribution to Temperature (cost 100)"
 
 [node name="TempUpgrade2" type="Button" parent="Container/TabContainer/Star/UpgradeList"]
 visible = false
@@ -255,6 +257,7 @@ margin_bottom = 504.0
 text = "Increase YYY"
 
 [node name="Cycles" type="HBoxContainer" parent="Container/TabContainer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -404,23 +407,94 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="rate" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
+[node name="PP1_rate" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
 margin_right = 256.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 0, 20 )
 text = "Conversion rate : 1.0"
+valign = 1
 
-[node name="outputRate" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
+[node name="PP1_outputRate" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
 margin_top = 24.0
 margin_right = 256.0
-margin_bottom = 38.0
+margin_bottom = 44.0
+rect_min_size = Vector2( 0, 20 )
 text = "Output conversion rate : 1.0"
+valign = 1
 
-[node name="chance" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
-margin_top = 42.0
+[node name="PP1_chance" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
+margin_top = 48.0
 margin_right = 256.0
-margin_bottom = 56.0
+margin_bottom = 68.0
+rect_min_size = Vector2( 0, 20 )
 text = "Chance for PP1 to happen : 0.1"
+valign = 1
+
+[node name="spacer" type="Control" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
+margin_top = 72.0
+margin_right = 256.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 0, 8 )
+
+[node name="PP2_rate" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
+visible = false
+margin_top = 84.0
+margin_right = 256.0
+margin_bottom = 104.0
+rect_min_size = Vector2( 0, 20 )
+text = "Conversion rate : 1.0"
+valign = 1
+
+[node name="PP2_outputRate" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
+visible = false
+margin_top = 108.0
+margin_right = 256.0
+margin_bottom = 128.0
+rect_min_size = Vector2( 0, 20 )
+text = "Output conversion rate : 1.0"
+valign = 1
+
+[node name="PP2_chance" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
+visible = false
+margin_top = 132.0
+margin_right = 256.0
+margin_bottom = 152.0
+rect_min_size = Vector2( 0, 20 )
+text = "Chance for PP2 to happen : 0.1"
+valign = 1
+
+[node name="spacer2" type="Control" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
+margin_top = 84.0
+margin_right = 256.0
+margin_bottom = 92.0
+rect_min_size = Vector2( 0, 8 )
+
+[node name="PP3_rate" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
+visible = false
+margin_top = 168.0
+margin_right = 256.0
+margin_bottom = 188.0
+rect_min_size = Vector2( 0, 20 )
+text = "Conversion rate : 1.0"
+valign = 1
+
+[node name="PP3_outputRate" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
+visible = false
+margin_top = 192.0
+margin_right = 256.0
+margin_bottom = 212.0
+rect_min_size = Vector2( 0, 20 )
+text = "Output conversion rate : 1.0"
+valign = 1
+
+[node name="PP3_chance" type="Label" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Stats"]
+visible = false
+margin_top = 216.0
+margin_right = 256.0
+margin_bottom = 236.0
+rect_min_size = Vector2( 0, 20 )
+text = "Chance for PP3 to happen : 0.1"
+valign = 1
 
 [node name="Upgrades" type="VBoxContainer" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer"]
 margin_left = 260.0
@@ -435,7 +509,7 @@ __meta__ = {
 margin_right = 340.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 150, 20 )
-text = "Increase PP1 conversion rate cost 1e6)"
+text = "Increase PP1 conversion rate cost 1e1)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -445,7 +519,7 @@ margin_top = 24.0
 margin_right = 340.0
 margin_bottom = 44.0
 rect_min_size = Vector2( 150, 0 )
-text = "Increase PP1 output conversion rate (cost 1e6)"
+text = "Increase PP1 output conversion rate (cost 5e1)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -455,12 +529,90 @@ margin_top = 48.0
 margin_right = 340.0
 margin_bottom = 68.0
 rect_min_size = Vector2( 250, 0 )
-text = "Increase PP1 chance (cost 1e6)"
+text = "Increase PP1 chance (cost 1.5e1)"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Super Nova" type="GridContainer" parent="Container/TabContainer"]
+[node name="spacer" type="Control" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades"]
+margin_top = 72.0
+margin_right = 340.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 0, 8 )
+
+[node name="PP2_rate_button" type="Button" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades"]
+visible = false
+margin_top = 84.0
+margin_right = 340.0
+margin_bottom = 104.0
+rect_min_size = Vector2( 150, 20 )
+text = "Increase PP2 conversion rate cost 5e8)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PP2_outputRate_button" type="Button" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades"]
+visible = false
+margin_top = 108.0
+margin_right = 340.0
+margin_bottom = 128.0
+rect_min_size = Vector2( 150, 0 )
+text = "Increase PP2 output conversion rate (cost 1e9)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PP2_chance_button" type="Button" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades"]
+visible = false
+margin_top = 132.0
+margin_right = 340.0
+margin_bottom = 152.0
+rect_min_size = Vector2( 250, 0 )
+text = "Increase PP2 chance (cost 1e7)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="spacer2" type="Control" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades"]
+margin_top = 84.0
+margin_right = 340.0
+margin_bottom = 92.0
+rect_min_size = Vector2( 0, 8 )
+
+[node name="PP3_rate_button" type="Button" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades"]
+visible = false
+margin_top = 168.0
+margin_right = 340.0
+margin_bottom = 188.0
+rect_min_size = Vector2( 150, 20 )
+text = "Increase PP2 conversion rate cost 5e10)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PP3_outputRate_button" type="Button" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades"]
+visible = false
+margin_top = 192.0
+margin_right = 340.0
+margin_bottom = 212.0
+rect_min_size = Vector2( 150, 0 )
+text = "Increase PP2 output conversion rate (cost 1e12)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PP3_chance_button" type="Button" parent="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades"]
+visible = false
+margin_top = 216.0
+margin_right = 340.0
+margin_bottom = 236.0
+rect_min_size = Vector2( 250, 0 )
+text = "Increase PP2 chance (cost 1e9)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Super Nova" type="CenterContainer" parent="Container/TabContainer"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -468,6 +620,24 @@ margin_left = 4.0
 margin_top = 32.0
 margin_right = -4.0
 margin_bottom = -4.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/TabContainer/Super Nova"]
+margin_left = 820.0
+margin_top = 463.0
+margin_right = 1091.0
+margin_bottom = 477.0
+
+[node name="Label" type="Label" parent="Container/TabContainer/Super Nova/VBoxContainer"]
+margin_right = 271.0
+margin_bottom = 14.0
+text = "Unlocked when reaching 0 Hydrogen mass"
+
+[node name="Button" type="Button" parent="Container/TabContainer/Super Nova/VBoxContainer"]
+visible = false
+margin_top = 18.0
+margin_right = 78.0
+margin_bottom = 38.0
+text = "Supernova"
 
 [node name="Achievements" type="GridContainer" parent="Container/TabContainer"]
 visible = false
@@ -586,7 +756,6 @@ __meta__ = {
 }
 
 [node name="Options" type="HBoxContainer" parent="Container/TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 4.0
@@ -596,7 +765,7 @@ margin_bottom = -4.0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="Container/TabContainer/Options"]
 margin_right = 950.0
-margin_bottom = 900.0
+margin_bottom = 940.0
 rect_min_size = Vector2( 950, 900 )
 
 [node name="UnitType" type="OptionButton" parent="Container/TabContainer/Options/VBoxContainer2"]
@@ -608,18 +777,26 @@ text = "Unit"
 [node name="VBoxContainer3" type="VBoxContainer" parent="Container/TabContainer/Options"]
 margin_left = 954.0
 margin_right = 1429.0
-margin_bottom = 900.0
+margin_bottom = 940.0
 rect_min_size = Vector2( 475, 900 )
 
-[node name="Button" type="Button" parent="Container/TabContainer/Options/VBoxContainer3"]
+[node name="saveInterval" type="Label" parent="Container/TabContainer/Options/VBoxContainer3"]
 margin_right = 475.0
-margin_bottom = 20.0
-text = "WIP"
+margin_bottom = 14.0
+text = "Save interval : 60s"
+
+[node name="HSlider" type="HSlider" parent="Container/TabContainer/Options/VBoxContainer3"]
+margin_top = 18.0
+margin_right = 475.0
+margin_bottom = 34.0
+min_value = 15.0
+max_value = 180.0
+value = 60.0
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="Container/TabContainer/Options"]
 margin_left = 1433.0
 margin_right = 1908.0
-margin_bottom = 900.0
+margin_bottom = 940.0
 rect_min_size = Vector2( 475, 900 )
 
 [node name="SaveConfig" type="Button" parent="Container/TabContainer/Options/VBoxContainer4"]
@@ -627,16 +804,22 @@ margin_right = 475.0
 margin_bottom = 20.0
 text = "Save config"
 
-[node name="Reset" type="Button" parent="Container/TabContainer/Options/VBoxContainer4"]
+[node name="LoadConfig" type="Button" parent="Container/TabContainer/Options/VBoxContainer4"]
 margin_top = 24.0
 margin_right = 475.0
 margin_bottom = 44.0
-text = "Reset"
+text = "Load config"
 
-[node name="SaveStar" type="Button" parent="Container/TabContainer/Options/VBoxContainer4"]
+[node name="Reset" type="Button" parent="Container/TabContainer/Options/VBoxContainer4"]
 margin_top = 48.0
 margin_right = 475.0
 margin_bottom = 68.0
+text = "Reset"
+
+[node name="SaveStar" type="Button" parent="Container/TabContainer/Options/VBoxContainer4"]
+margin_top = 72.0
+margin_right = 475.0
+margin_bottom = 92.0
 text = "Save Star Infos"
 
 [node name="LineEdit" type="LineEdit" parent="Container/TabContainer/Options/VBoxContainer4"]
@@ -646,7 +829,7 @@ margin_right = 475.0
 margin_bottom = 96.0
 
 [node name="gameTick" type="Timer" parent="."]
-wait_time = 0.05
+wait_time = 0.1
 autostart = true
 
 [node name="Panel" type="Panel" parent="."]
@@ -678,14 +861,29 @@ font = SubResource( 12 )
 x_axis = 64.0
 lerp_axis = 0.5
 
+[node name="saveTimer" type="Timer" parent="."]
+wait_time = 60.0
+autostart = true
+
 [connection signal="resized" from="." to="." method="_on_Control_resized"]
+[connection signal="pressed" from="Container/TabContainer/Star/UpgradeList/TempUpgrade" to="." method="_on_TempUpgrade_pressed"]
 [connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/PP-Cycle/VBoxContainer/PP1unlock" to="." method="_on_PP1unlock_pressed"]
 [connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/PP-Cycle/VBoxContainer/PP2unlock" to="." method="_on_PP2unlock_pressed"]
 [connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/PP-Cycle/VBoxContainer/PP3unlock" to="." method="_on_PP3unlock_pressed"]
 [connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades/PP1_rate_button" to="." method="_on_PP1_rateUpgrade_pressed"]
 [connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades/PP1_outputRate_button" to="." method="_on_PP1_outputRate_button_pressed"]
 [connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades/PP1_chance_button" to="." method="_on_PP1_chance_button_pressed"]
+[connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades/PP2_rate_button" to="." method="_on_PP2_rate_button_pressed"]
+[connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades/PP2_outputRate_button" to="." method="_on_PP2_outputRate_button_pressed"]
+[connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades/PP2_chance_button" to="." method="_on_PP2_chance_button_pressed"]
+[connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades/PP3_rate_button" to="." method="_on_PP3_rate_button_pressed"]
+[connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades/PP3_outputRate_button" to="." method="_on_PP3_outputRate_button_pressed"]
+[connection signal="pressed" from="Container/TabContainer/Cycles/FusionsTab/Hydrogen/Upgrades/HBoxContainer/Upgrades/PP3_chance_button" to="." method="_on_PP3_chance_button_pressed"]
+[connection signal="pressed" from="Container/TabContainer/Super Nova/VBoxContainer/Button" to="." method="_on_Button_pressed"]
 [connection signal="item_selected" from="Container/TabContainer/Options/VBoxContainer2/UnitType" to="." method="_on_UnitType_item_selected"]
+[connection signal="value_changed" from="Container/TabContainer/Options/VBoxContainer3/HSlider" to="." method="_on_HSlider_value_changed"]
 [connection signal="pressed" from="Container/TabContainer/Options/VBoxContainer4/SaveConfig" to="." method="_on_SaveConfig_pressed"]
+[connection signal="pressed" from="Container/TabContainer/Options/VBoxContainer4/LoadConfig" to="." method="_on_LoadConfig_pressed"]
 [connection signal="pressed" from="Container/TabContainer/Options/VBoxContainer4/SaveStar" to="." method="_on_SaveStar_pressed"]
 [connection signal="timeout" from="gameTick" to="." method="_on_gameTick_timeout"]
+[connection signal="timeout" from="saveTimer" to="." method="_on_saveTimer_timeout"]

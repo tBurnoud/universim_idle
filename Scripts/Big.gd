@@ -30,7 +30,7 @@ func _init(m,e=0):
 func size_check(m):
 	if m > MAX_MANTISSA:
 		printerr(self.toScientific() + " BIG ERROR: MANTISSA TOO LARGE, PLEASE USE EXPONENT OR SCIENTIFIC NOTATION (mantissa : " + str(m) + ")")
-#		breakpoint
+		breakpoint
 
 func type_check(n):
 	if typeof(n) == TYPE_INT or typeof(n) == TYPE_REAL:
@@ -239,9 +239,8 @@ func toString():
 		return toScientific()
 
 func toScientific():
-	if exponent >= 1:
-		return str(floor(mantissa*1000.0)/1000.0) + "e" + str(exponent)
-	return str(floor(mantissa*1000.0)/1000.0)
+	return str(floor(mantissa*1000.0)/1000.0) + "e" + str(exponent)
+#	return str(float(floor((mantissa*1000.0)/1000.0)) * pow(10.0, exponent), exponent)
 
 func toFloat():
 	return stepify(float(str(floor(mantissa*1000.0)/1000.0) + "e" + str(exponent)),0.01)

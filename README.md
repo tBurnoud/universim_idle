@@ -3,8 +3,8 @@
 My own small attempt at creating an idle game.
 
 
-## html version ?
-[game](Builds/html/Universim.html)
+## html version
+[game](https://tburnoud.github.io/universim_idle/Builds/html/Universim.html)
 
 ## Screenshot
 
